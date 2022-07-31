@@ -1,39 +1,39 @@
 package main
 
 type User struct {
-	userId    int    `json:"id"`
-	isBot     bool   `json:"is_bot"`
-	firstName string `json:"first_name"`
+	UserId    int    `json:"id"`
+	IsBot     bool   `json:"is_bot"`
+	FirstName string `json:"first_name"`
 }
 type Chat struct {
-	chatId    int    `json:"id"`
-	chatType  string `json:"type"`
-	chatTitle string `json:"title"`
+	ChatId    int    `json:"id"`
+	ChatType  string `json:"type"`
+	ChatTitle string `json:"title"`
 }
 type Animation struct {
-	fileId       string `json:"file_id"`
-	fileUniqueId string `json:"file_unique_id"`
-	width        int    `json:"width"`
-	height       int    `json:"height"`
-	duration     int    `json:"duration"`
+	FileId       string `json:"file_id"`
+	FileUniqueId string `json:"file_unique_id"`
+	Width        int    `json:"width"`
+	Weight       int    `json:"height"`
+	Duration     int    `json:"duration"`
 }
 
 type Message struct {
-	messageId   int        `json:"message_id"`
-	messageFrom *User      `json:"from"`
-	senderChat  *Chat      `json:"chat"`
-	animation   *Animation `json:"animation"`
+	MessageId   int        `json:"message_id"`
+	MessageFrom *User      `json:"from"`
+	SenderChat  *Chat      `json:"chat"`
+	Animation   *Animation `json:"animation"`
 }
 type Update struct {
-	updateId int      `json:"update_id"`
-	message  *Message `json:"message"`
+	UpdateId int      `json:"update_id"`
+	Message  *Message `json:"message"`
 }
 
 type UpdateArrayFromResponse struct {
-	array []Update `json:"result"`
+	Array []Update `json:"result"`
 }
 
-func (anim *Animation) isAnimation() bool {
+func (anim *Animation) IsAnimation() bool {
 	if anim != nil {
 		return true
 	} else {
@@ -41,8 +41,8 @@ func (anim *Animation) isAnimation() bool {
 	}
 }
 
-func (chat *Chat) deleteGifs(message Message) bool {
-	if message.animation.isAnimation() {
+func (chat *Chat) DeleteGifs(message Message) bool {
+	if message.Animation.IsAnimation() {
 
 		return true
 	} else {

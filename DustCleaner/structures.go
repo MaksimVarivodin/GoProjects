@@ -24,19 +24,25 @@ func main() {
 
 }
 func getUpdates() ([]Update, error) {
-	resp, err := http.Get(botUrl + "getUpdates")
+	resp, err := http.Get(botUrl + "/getUpdates")
 	if err != nil {
+		fmt.Println("Error while getting, file: strustures.go,  line: 27", err.Error())
+		fmt.Scanln()
 		return nil, err
 	}
 	defer resp.Body.Close() // я так понимаю удаление переменной
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		fmt.Println("Error while reading, file: strustures.go,  line: 34", err.Error())
+		fmt.Scanln()
 		return nil, err
 	}
 	var arr UpdateArrayFromResponse
 	err = json.Unmarshal(body, &arr)
 	if err != nil {
+		fmt.Println("Error while unmarshaling, file: strustures.go,  line: 41", err.Error())
+		fmt.Scanln()
 		return nil, err
 	}
-	return arr.array, nil
+	return arr.Array, nil
 }
