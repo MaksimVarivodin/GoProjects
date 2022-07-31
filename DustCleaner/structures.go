@@ -19,10 +19,13 @@ func main() {
 		if err != nil {
 			log.Println("Error", err.Error())
 		}
-		fmt.Println(updates)
+		for _, upd := range updates {
+			upd.Message.Println()
+		}
 	}
 
 }
+
 func getUpdates() ([]Update, error) {
 	resp, err := http.Get(botUrl + "/getUpdates")
 	if err != nil {
