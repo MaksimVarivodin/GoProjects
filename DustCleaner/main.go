@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type User struct {
 	UserId    int    `json:"id"`
 	IsBot     bool   `json:"is_bot"`
@@ -22,6 +24,7 @@ type Message struct {
 	MessageId   int        `json:"message_id"`
 	MessageFrom *User      `json:"from"`
 	SenderChat  *Chat      `json:"chat"`
+	Text        string     `json:"text"`
 	Animation   *Animation `json:"animation"`
 }
 type Update struct {
@@ -31,6 +34,14 @@ type Update struct {
 
 type UpdateArrayFromResponse struct {
 	Array []Update `json:"result"`
+}
+
+func (mess *Message) Println() {
+	fmt.Println("MessageId: ", mess.MessageId)
+	fmt.Println("MessageFrom: ", mess.MessageFrom)
+	fmt.Println("SenderChat: ", mess.SenderChat)
+	fmt.Println("Text: ", mess.Text)
+	fmt.Println("Animation: ", mess.Animation)
 }
 
 func (anim *Animation) IsAnimation() bool {
