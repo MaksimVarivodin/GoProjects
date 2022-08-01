@@ -16,23 +16,41 @@ var botUrl string = botApi + botToken
 
 func main() {
 	iter := 0
+	/**
+	 getting all of the previous messages together(if any)
+	 and deleting all of the gif's
+	/**/
+	// here is getting all of the info in the bot
 	oldUpd, offset, err1 := getOffset()
 	if err1 != nil {
 		log.Println("Error", err1.Error())
 	}
+	// here we're deleting all gif's
+	//(but they stay for some time at the server)
 	iter = delInUpd(oldUpd, iter)
+	/**
+	 infinite cycle which gets updates and deletes
+	all of the gif's recently sent
+	/**/
 	for {
-
+		// getting updates
 		upd, err := getUpdates(offset)
 		if err != nil {
 			log.Println("Error", err.Error())
 		}
+		/**
+		if the updates array didn't change,
+		 we check again
+		/**/
 		if len(oldUpd) == len(upd) {
 			continue
 		} else {
-			//iter = len(oldUpd) - 1
 			oldUpd = upd
 		}
+		/**
+		if the check says that array has bigger size
+		we check most recent messages if any of them contain gif's
+		/**/
 		iter = delInUpd(upd, iter)
 		_, offset, err1 = getOffset()
 		if err1 != nil {
