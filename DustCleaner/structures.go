@@ -6,28 +6,45 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 )
 
-const botToken string = "5484587003:AAGAUGUB0_A6cnvLEBOAlDn_yYIkefteJH8"
+const botToken string = "5496691862:AAEiqlkAbjfz2RzLftJPFs6eCR3EoruO2wQ"
 const botApi string = "https://api.telegram.org/bot"
 
 var botUrl string = botApi + botToken
 
 func main() {
+	iter := 0
+	oldUpd, offset, err1 := getOffset()
+	if err1 != nil {
+		log.Println("Error", err1.Error())
+	}
+	iter = delInUpd(oldUpd, iter)
 	for {
-		updates, err := getUpdates()
+
+		upd, err := getUpdates(offset)
 		if err != nil {
 			log.Println("Error", err.Error())
 		}
-		for _, upd := range updates {
-			upd.Message.Println()
+		if len(oldUpd) == len(upd) {
+			continue
+		} else {
+			//iter = len(oldUpd) - 1
+			oldUpd = upd
+		}
+		iter = delInUpd(upd, iter)
+		_, offset, err1 = getOffset()
+		if err1 != nil {
+			log.Println("Error", err1.Error())
 		}
 	}
 
 }
 
-func getUpdates() ([]Update, error) {
-	resp, err := http.Get(botUrl + "/getUpdates")
+func getUpdates(offset int) ([]Update, error) {
+
+	resp, err := http.Get(botUrl + "/getUpdates" + "?offset=" + strconv.Itoa(offset))
 	if err != nil {
 		fmt.Println("Error while getting, file: strustures.go,  line: 27", err.Error())
 		fmt.Scanln()
@@ -48,4 +65,25 @@ func getUpdates() ([]Update, error) {
 		return nil, err
 	}
 	return arr.Array, nil
+}
+
+func getOffset() ([]Update, int, error) {
+	offset := 0
+	upd, err := getUpdates(offset)
+	if err != nil {
+		return nil, 0, err
+	}
+	offset = upd[len(upd)-1].Message.MessageId + 1
+	return upd, offset, nil
+}
+
+func delInUpd(arr []Update, iter int) int {
+	for iter < len(arr) {
+		var mes Message
+		mes.Chat = new(Chat)
+		mes.Chat.ChatId = arr[iter].Message.Chat.ChatId
+		arr[iter].Message.DeleteGifs(botUrl)
+		iter += 1
+	}
+	return iter
 }
